@@ -1,47 +1,44 @@
 " Plugin manager
-set nocompatible
-filetype off
+call plug#begin('~/.local/share/nvim/plugged')
 
-set rtp+=~/.vim/bundle/Vundle.vim
-call vundle#begin()
-
-Plugin 'VundleVim/Vundle.vim'
-Plugin 'vim-airline/vim-airline'
-Plugin 'vim-airline/vim-airline-themes'
-Plugin 'ctrlpvim/ctrlp.vim'
-Plugin 'ryanoasis/vim-devicons'
-Plugin 'scrooloose/nerdtree'
-Plugin 'majutsushi/tagbar'
-Plugin 'vim-syntastic/syntastic'
-Plugin 'davidhalter/jedi-vim'
-Plugin 'pangloss/vim-javascript'
-Plugin 'Valloric/YouCompleteMe'
-Plugin 'editorconfig/editorconfig-vim'
-Plugin 'mattn/emmet-vim'
-Plugin 'skammer/vim-css-color'
-Plugin 'vhdirk/vim-cmake'
-Plugin 'christoomey/vim-tmux-navigator'
-Plugin 'ekalinin/Dockerfile.vim'
-Plugin 'octol/vim-cpp-enhanced-highlight'
-Plugin 'jiangmiao/auto-pairs'
-Plugin 'godlygeek/tabular'
-Plugin 'plasticboy/vim-markdown'
-Plugin 'rhysd/vim-gfm-syntax'
-Plugin 'airblade/vim-gitgutter'
-Plugin 'othree/html5.vim'
-Plugin 'SirVer/ultisnips'
-Plugin 'honza/vim-snippets'
+Plug 'VundleVim/Vundle.vim'
+Plug 'vim-airline/vim-airline'
+Plug 'vim-airline/vim-airline-themes'
+Plug 'ctrlpvim/ctrlp.vim'
+Plug 'ryanoasis/vim-devicons'
+Plug 'scrooloose/nerdtree'
+Plug 'majutsushi/tagbar'
+Plug 'vim-syntastic/syntastic'
+Plug 'davidhalter/jedi-vim'
+Plug 'pangloss/vim-javascript'
+Plug 'Valloric/YouCompleteMe'
+Plug 'editorconfig/editorconfig-vim'
+Plug 'mattn/emmet-vim'
+Plug 'skammer/vim-css-color'
+Plug 'vhdirk/vim-cmake'
+Plug 'christoomey/vim-tmux-navigator'
+Plug 'ekalinin/Dockerfile.vim'
+Plug 'octol/vim-cpp-enhanced-highlight'
+Plug 'jiangmiao/auto-pairs'
+Plug 'godlygeek/tabular'
+Plug 'plasticboy/vim-markdown'
+Plug 'rhysd/vim-gfm-syntax'
+Plug 'airblade/vim-gitgutter'
+Plug 'othree/html5.vim'
+Plug 'SirVer/ultisnips'
+Plug 'honza/vim-snippets'
+Plug 'xuhdev/vim-latex-live-preview', { 'for': 'tex' }
 
 " Themes
-Plugin 'wimstefan/vim-artesanal'
-Plugin 'dim13/smyck.vim'
-Plugin 'crusoexia/vim-monokai'
-Plugin 'arcticicestudio/nord-vim'
+Plug 'wimstefan/vim-artesanal'
+Plug 'dim13/smyck.vim'
+Plug 'crusoexia/vim-monokai'
+Plug 'arcticicestudio/nord-vim'
+Plug 'joshdick/onedark.vim'
 
-call vundle#end()
-filetype plugin indent on
+call plug#end()
 
-" General settings
+" General settings {{{
 set encoding=utf-8
 set tabstop=4
 set softtabstop=4
@@ -50,8 +47,11 @@ set noexpandtab
 set foldmethod=indent
 set foldlevel=99
 set number
-set nocompatible
-set t_Co=256
+
+if has('termguicolors')
+	set termguicolors
+endif
+
 syntax enable
 inoremap <expr> <CR> pumvisible() ? "\<C-Y>" : "\<CR>"
 
@@ -60,12 +60,13 @@ if has('gui_running')
 	colorscheme smyck
 else
 	set background=dark
-	colorscheme monokai 
+	colorscheme onedark 
 endif
 set completeopt-=preview
 
 set cursorline
-highlight CursorLine term=bold cterm=bold guibg=Grey40
+highlight CursorLine term=bold cterm=bold guibg=#555753
+" }}}
 
 " Vim airline
 let g:airline#extensions#tabline#enabled = 1
@@ -152,7 +153,7 @@ let g:UltiSnipsJumpBackwardTrigger = '<c-z>'
 
 let g:UltiSnipsEditSplit = 'vertical'
 
-" Languages
+" Languages {{{
 
 " C++
 let g:ycm_complete_in_comments = 1
@@ -188,7 +189,13 @@ au BufNewFile,BufRead *.js,*.html,*.css
 
 let g:javascript_plugin_flow = 1
 
+" }}}
+
 " Github markdown
 let g:gfm_syntax_enable_always = 0
 let g:gfm_syntax_enable_filetypes = ['markdown.gfm']
 autocmd BufRead,BufNew,BufNewFile README.md setlocal ft=markdown.gfm
+
+" LaTeX
+autocmd FileType tex setl updatetime=1
+let g:livepreview_previewer = 'xreader'
