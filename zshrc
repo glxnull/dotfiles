@@ -9,6 +9,7 @@ plugins=(
     yarn
     python
     tmux
+	fast-syntax-highlighting
 )
 
 source $ZSH/oh-my-zsh.sh
@@ -17,25 +18,16 @@ source $ZSH/oh-my-zsh.sh
 export TERM="xterm-256color" 
 
 export NVM_DIR="$HOME/.nvm"
-[ -s "$NVM_DIR/nvm.sh" ] && \. "$NVM_DIR/nvm.sh"  # This loads nvm
-[ -s "$NVM_DIR/bash_completion" ] && \. "$NVM_DIR/bash_completion"  # This loads nvm bash_completion
+[ -s "$NVM_DIR/nvm.sh" ] && \. "$NVM_DIR/nvm.sh"
+[ -s "$NVM_DIR/bash_completion" ] && \. "$NVM_DIR/bash_completion"
 
 # Add RVM to PATH for scripting. 
 export PATH="$PATH:$HOME/.rvm/bin"
 
 # Tools
 export PATH="$PATH:$HOME/.tools/yarn/bin:$HOME/.tools/robo3t/bin"
+export PATH="$PATH:$HOME/.tools/julia/bin"
 export PATH="$PATH:$HOME/.tools/ngrok"
-
-# Qt integration 
-unset QT_STYLE_OVERRIDE
-export QT_QPA_PLATFORMTHEME=qt5ct
-alias qtdesigner="/usr/lib/x86_64-linux-gnu/qt5/bin/designer"
-
-# VTE fix
-if [ $TILIX_ID ] || [ $VTE_VERSION ]; then
-    source /etc/profile.d/vte.sh
-fi
 
 # Powerlevel9k customization
 POWERLEVEL9K_MODE='nerdfont-complete'
@@ -93,4 +85,4 @@ POWERLEVEL9K_TIME_BACKGROUND="black"
 POWERLEVEL9K_TIME_FOREGROUND="249"
 POWERLEVEL9K_TIME_FORMAT="%D{%H:%M:%S} \UE12E"
 POWERLEVEL9K_LEFT_PROMPT_ELEMENTS=('status' 'os_icon' 'todo' 'context' 'dir' 'vcs')
-POWERLEVEL9K_RIGHT_PROMPT_ELEMENTS=('virtualenv' 'nvm' 'rvm' 'load' 'ram_joined' 'battery' 'time')
+POWERLEVEL9K_RIGHT_PROMPT_ELEMENTS=('virtualenv' 'nvm' 'rvm' 'load' 'ram_joined' 'battery')
