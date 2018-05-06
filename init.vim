@@ -1,7 +1,6 @@
 " Plugin manager
 call plug#begin('~/.local/share/nvim/plugged')
 
-Plug 'VundleVim/Vundle.vim'
 Plug 'vim-airline/vim-airline'
 Plug 'vim-airline/vim-airline-themes'
 Plug 'ctrlpvim/ctrlp.vim'
@@ -9,9 +8,7 @@ Plug 'ryanoasis/vim-devicons'
 Plug 'scrooloose/nerdtree'
 Plug 'majutsushi/tagbar'
 Plug 'vim-syntastic/syntastic'
-Plug 'davidhalter/jedi-vim'
 Plug 'pangloss/vim-javascript'
-Plug 'Valloric/YouCompleteMe'
 Plug 'editorconfig/editorconfig-vim'
 Plug 'mattn/emmet-vim'
 Plug 'skammer/vim-css-color'
@@ -28,6 +25,14 @@ Plug 'othree/html5.vim'
 Plug 'SirVer/ultisnips'
 Plug 'honza/vim-snippets'
 Plug 'xuhdev/vim-latex-live-preview', { 'for': 'tex' }
+Plug 'jpalardy/vim-slime'
+Plug 'JuliaEditorSupport/julia-vim'
+Plug 'arakashic/chromatica.nvim'
+Plug 'Shougo/deoplete.nvim', { 'do': ':UpdateRemotePlugins' }
+Plug 'zchee/deoplete-jedi'
+Plug 'Shougo/neco-vim'
+Plug 'wokalski/autocomplete-flow'
+Plug 'zchee/deoplete-clang'
 
 " Themes
 Plug 'wimstefan/vim-artesanal'
@@ -35,6 +40,7 @@ Plug 'dim13/smyck.vim'
 Plug 'crusoexia/vim-monokai'
 Plug 'arcticicestudio/nord-vim'
 Plug 'joshdick/onedark.vim'
+Plug 'chriskempson/base16-vim'
 
 call plug#end()
 
@@ -49,23 +55,25 @@ set foldlevel=99
 set number
 
 if has('termguicolors')
-	set termguicolors
+    set termguicolors
 endif
 
 syntax enable
 inoremap <expr> <CR> pumvisible() ? "\<C-Y>" : "\<CR>"
 
 if has('gui_running')
-	set background=dark
-	colorscheme smyck
+    set background=dark
+    colorscheme smyck
 else
-	set background=dark
-	colorscheme onedark 
+    set background=dark
+    colorscheme base16-irblack
 endif
 set completeopt-=preview
 
 set cursorline
 highlight CursorLine term=bold cterm=bold guibg=#555753
+
+let g:deoplete#enable_at_startup = 1
 " }}}
 
 " Vim airline
@@ -76,7 +84,7 @@ let g:airline_powerline_fonts = 1
 let g:airline_theme='base16'
 
 if !exists('g:airline_symbols')
-	let g:airline_symbols = {}
+    let g:airline_symbols = {}
 endif
 
 " unicode symbols
@@ -156,18 +164,17 @@ let g:UltiSnipsEditSplit = 'vertical'
 " Languages {{{
 
 " C++
-let g:ycm_complete_in_comments = 1
-let g:ycm_confirm_extra_conf = 0
-let g:ycm_collect_identifiers_from_tags_files = 1
-let g:ycm_min_num_of_chars_for_completion = 1
-let g:ycm_cache_omnifunc = 0
-let g:ycm_seed_identifiers_with_syntax=1
+let g:deoplete#sources#clang#libclang_path = '/usr/lib/llvm-6.0/lib/libclang.so'
+let g:deoplete#sources#clang#clang_header = '/usr/lib/clang/6.0.0'
 
 let g:cpp_class_scope_highlight = 1
 let g:cpp_member_variable_highlight = 1
 let g:cpp_class_decl_highlight = 1
 
 let g:cpp_class_scope_highlight = 1
+
+let g:chromatica#enable_at_startup = 1
+let g:chromatica#libclang_path = '/usr/lib/llvm-6.0/lib/libclang.so'
 
 " Python
 au BufNewFile,BufRead *.py
@@ -188,6 +195,7 @@ au BufNewFile,BufRead *.js,*.html,*.css
     \ set shiftwidth=2
 
 let g:javascript_plugin_flow = 1
+let g:autocomplete_flow#insert_paren_after_function = 0
 
 " }}}
 
@@ -198,4 +206,7 @@ autocmd BufRead,BufNew,BufNewFile README.md setlocal ft=markdown.gfm
 
 " LaTeX
 autocmd FileType tex setl updatetime=1
-let g:livepreview_previewer = 'xreader'
+let g:livepreview_previewer = 'okular'
+
+" Vim slime
+let g:slime_target = 'tmux'
