@@ -24,6 +24,7 @@ Plug 'airblade/vim-gitgutter'
 Plug 'othree/html5.vim'
 Plug 'SirVer/ultisnips'
 Plug 'honza/vim-snippets'
+Plug 'ntpeters/vim-better-whitespace'
 Plug 'xuhdev/vim-latex-live-preview', { 'for': 'tex' }
 Plug 'jpalardy/vim-slime'
 Plug 'JuliaEditorSupport/julia-vim'
@@ -31,8 +32,11 @@ Plug 'arakashic/chromatica.nvim'
 Plug 'Shougo/deoplete.nvim', { 'do': ':UpdateRemotePlugins' }
 Plug 'zchee/deoplete-jedi'
 Plug 'Shougo/neco-vim'
-Plug 'wokalski/autocomplete-flow'
 Plug 'zchee/deoplete-clang'
+Plug 'zchee/deoplete-go', { 'do': 'make' }
+Plug 'carlitux/deoplete-ternjs'
+Plug 'posva/vim-vue'
+Plug 'fatih/vim-go'
 
 " Themes
 Plug 'wimstefan/vim-artesanal'
@@ -41,6 +45,7 @@ Plug 'crusoexia/vim-monokai'
 Plug 'arcticicestudio/nord-vim'
 Plug 'joshdick/onedark.vim'
 Plug 'chriskempson/base16-vim'
+Plug 'NLKNguyen/papercolor-theme'
 
 call plug#end()
 
@@ -49,10 +54,14 @@ set encoding=utf-8
 set tabstop=4
 set softtabstop=4
 set shiftwidth=4
-set noexpandtab
+set expandtab
 set foldmethod=indent
 set foldlevel=99
 set number
+set title
+set autoindent
+set smartindent
+set updatetime=100
 
 if has('termguicolors')
     set termguicolors
@@ -66,7 +75,7 @@ if has('gui_running')
     colorscheme smyck
 else
     set background=dark
-    colorscheme base16-irblack
+    colorscheme PaperColor
 endif
 set completeopt-=preview
 
@@ -81,7 +90,7 @@ let g:airline#extensions#tabline#enabled = 1
 let g:airline#extensions#tabline#left_sep = ' '
 let g:airline#extensions#tabline#left_alt_sep = '|'
 let g:airline_powerline_fonts = 1
-let g:airline_theme='base16'
+let g:airline_theme = 'minimalist'
 
 if !exists('g:airline_symbols')
     let g:airline_symbols = {}
@@ -147,7 +156,9 @@ let g:syntastic_cpp_checkers = ['clang']
 let g:syntastic_cpp_compiler = 'clang'
 let g:syntastic_cpp_compiler_options = '-std=c++14'
 
-let g:syntastic_javascript_checkers=['eslint']
+let g:syntastic_javascript_checkers = ['eslint']
+
+let g:syntastic_tex_checkers = ['lacheck']
 
 let g:syntastic_error_symbol = '✗'
 let g:syntastic_warning_symbol = '⚠'
@@ -160,6 +171,12 @@ let g:UltiSnipsJumpForwardTrigger = '<c-b>'
 let g:UltiSnipsJumpBackwardTrigger = '<c-z>'
 
 let g:UltiSnipsEditSplit = 'vertical'
+
+" Vim slime
+let g:slime_target = 'tmux'
+
+" Better Whitespace
+hi ExtraWhitespace guibg=#E06C75
 
 " Languages {{{
 
@@ -186,7 +203,22 @@ au BufNewFile,BufRead *.py
     \ set autoindent |
     \ set fileformat=unix
 
-autocmd FileType python setlocal completeopt-=preview
+if has('neovim')
+    let g:python3_host_prog = '/usr/bin/python3'
+endif
+
+" Go
+let g:deoplete#sources#go#gocode_binary = $GOPATH . '/bin/gocode'
+let g:deoplete#sources#go#sort_class = ['package', 'func', 'type', 'var', 'const']
+
+let g:go_highlight_build_constraints = 1
+let g:go_highlight_extra_types = 1
+let g:go_highlight_fields = 1
+let g:go_highlight_functions = 1
+let g:go_highlight_methods = 1
+let g:go_highlight_operators = 1
+let g:go_highlight_structs = 1
+let g:go_highlight_types = 1
 
 " Web Development
 au BufNewFile,BufRead *.js,*.html,*.css
@@ -194,8 +226,7 @@ au BufNewFile,BufRead *.js,*.html,*.css
     \ set softtabstop=2 |
     \ set shiftwidth=2
 
-let g:javascript_plugin_flow = 1
-let g:autocomplete_flow#insert_paren_after_function = 0
+let g:deoplete#sources#ternjs#timeout = 1
 
 " }}}
 
@@ -207,6 +238,3 @@ autocmd BufRead,BufNew,BufNewFile README.md setlocal ft=markdown.gfm
 " LaTeX
 autocmd FileType tex setl updatetime=1
 let g:livepreview_previewer = 'okular'
-
-" Vim slime
-let g:slime_target = 'tmux'
