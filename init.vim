@@ -15,7 +15,6 @@ Plug 'skammer/vim-css-color'
 Plug 'vhdirk/vim-cmake'
 Plug 'christoomey/vim-tmux-navigator'
 Plug 'ekalinin/Dockerfile.vim'
-Plug 'octol/vim-cpp-enhanced-highlight'
 Plug 'jiangmiao/auto-pairs'
 Plug 'godlygeek/tabular'
 Plug 'plasticboy/vim-markdown'
@@ -28,7 +27,6 @@ Plug 'ntpeters/vim-better-whitespace'
 Plug 'xuhdev/vim-latex-live-preview', { 'for': 'tex' }
 Plug 'jpalardy/vim-slime'
 Plug 'JuliaEditorSupport/julia-vim'
-Plug 'arakashic/chromatica.nvim'
 Plug 'Shougo/deoplete.nvim', { 'do': ':UpdateRemotePlugins' }
 Plug 'zchee/deoplete-jedi'
 Plug 'Shougo/neco-vim'
@@ -37,6 +35,8 @@ Plug 'zchee/deoplete-go', { 'do': 'make' }
 Plug 'carlitux/deoplete-ternjs'
 Plug 'posva/vim-vue'
 Plug 'fatih/vim-go'
+Plug 'bbchung/Clamp'
+Plug 'octol/vim-cpp-enhanced-highlight'
 
 " Themes
 Plug 'wimstefan/vim-artesanal'
@@ -62,6 +62,7 @@ set title
 set autoindent
 set smartindent
 set updatetime=100
+set noshowmode
 
 if has('termguicolors')
     set termguicolors
@@ -96,28 +97,36 @@ if !exists('g:airline_symbols')
     let g:airline_symbols = {}
 endif
 
-" unicode symbols
-let g:airline_left_sep = '»'
-let g:airline_left_sep = '▶'
-let g:airline_right_sep = '«'
-let g:airline_right_sep = '◀'
-let g:airline_symbols.linenr = '␊'
-let g:airline_symbols.linenr = '␤'
-let g:airline_symbols.linenr = '¶'
-let g:airline_symbols.branch = '⎇'
-let g:airline_symbols.paste = 'ρ'
-let g:airline_symbols.paste = 'Þ'
-let g:airline_symbols.paste = '∥'
-let g:airline_symbols.whitespace = 'Ξ'
+if !exists('g:airline_powerline_fonts')
+  let g:airline#extensions#tabline#left_sep = ' '
+  let g:airline#extensions#tabline#left_alt_sep = '|'
+  let g:airline_left_sep          = '▶'
+  let g:airline_left_alt_sep      = '»'
+  let g:airline_right_sep         = '◀'
+  let g:airline_right_alt_sep     = '«'
+  let g:airline#extensions#branch#prefix     = '⤴' "➔, ➥, ⎇
+  let g:airline#extensions#readonly#symbol   = '⊘'
+  let g:airline#extensions#linecolumn#prefix = '¶'
+  let g:airline#extensions#paste#symbol      = 'ρ'
+  let g:airline_symbols.linenr    = '␊'
+  let g:airline_symbols.branch    = '⎇'
+  let g:airline_symbols.paste     = 'ρ'
+  let g:airline_symbols.paste     = 'Þ'
+  let g:airline_symbols.paste     = '∥'
+  let g:airline_symbols.whitespace = 'Ξ'
+else
+  let g:airline#extensions#tabline#left_sep = ''
+  let g:airline#extensions#tabline#left_alt_sep = ''
 
-" airline symbols
-let g:airline_left_sep = ''
-let g:airline_left_alt_sep = ''
-let g:airline_right_sep = ''
-let g:airline_right_alt_sep = ''
-let g:airline_symbols.branch = ''
-let g:airline_symbols.readonly = ''
-let g:airline_symbols.linenr = ''
+  " powerline symbols
+  let g:airline_left_sep = ''
+  let g:airline_left_alt_sep = ''
+  let g:airline_right_sep = ''
+  let g:airline_right_alt_sep = ''
+  let g:airline_symbols.branch = ''
+  let g:airline_symbols.readonly = ''
+  let g:airline_symbols.linenr = ''
+endif
 
 " Icons
 let g:webdevicons_enable = 1
@@ -188,10 +197,8 @@ let g:cpp_class_scope_highlight = 1
 let g:cpp_member_variable_highlight = 1
 let g:cpp_class_decl_highlight = 1
 
-let g:cpp_class_scope_highlight = 1
-
-let g:chromatica#enable_at_startup = 1
-let g:chromatica#libclang_path = '/usr/lib/llvm-6.0/lib/libclang.so'
+let g:clamp_autostart = 1
+let g:clamp_libclang_path = '/usr/lib/llvm-6.0/lib/libclang.so'
 
 " Python
 au BufNewFile,BufRead *.py
