@@ -27,27 +27,26 @@ Plug 'bbchung/Clamp'
 Plug 'vhdirk/vim-cmake'
 
 " Python
+Plug 'vim-python/python-syntax'
 Plug 'zchee/deoplete-jedi'
-
-" Go
-Plug 'fatih/vim-go'
-Plug 'zchee/deoplete-go', { 'do': 'make' }
 
 " Web development
 Plug 'mattn/emmet-vim'
 Plug 'othree/html5.vim'
-Plug 'skammer/vim-css-color'
-Plug 'hail2u/vim-css3-syntax'
 Plug 'othree/csscomplete.vim'
+Plug 'cakebaker/scss-syntax.vim'
 Plug 'pangloss/vim-javascript'
 Plug 'ternjs/tern_for_vim', { 'do': 'npm install' }
 Plug 'posva/vim-vue'
 Plug 'ternjs/tern_for_vim', { 'for': ['javascript'] }
 Plug 'carlitux/deoplete-ternjs', { 'for': ['javascript'] }
+Plug 'leshill/vim-json'
+Plug 'prettier/vim-prettier'
 
 " Utils
 Plug 'tpope/vim-fugitive'
 Plug 'airblade/vim-gitgutter'
+Plug 'reedes/vim-pencil'
 Plug 'plasticboy/vim-markdown'
 Plug 'rhysd/vim-gfm-syntax'
 Plug 'ekalinin/Dockerfile.vim'
@@ -92,7 +91,7 @@ if has('gui_running')
     colorscheme smyck
 else
     set background=dark
-    colorscheme PaperColor
+    colorscheme base16-ocean
 endif
 set completeopt-=preview
 
@@ -100,8 +99,8 @@ set cursorline
 highlight CursorLine term=bold cterm=bold guibg=#555753
 
 " Move between buffers with Shift + arrow key
-nnoremap <S-Left> :bprevious<CR>
-nnoremap <S-Right> :bnext<CR>
+nnoremap <C-Left> :bprevious<CR>
+nnoremap <C-Right> :bnext<CR>
 
 " Split buffers
 nnoremap <C-z> :vsplit<CR>
@@ -116,7 +115,7 @@ let g:airline#extensions#tabline#enabled = 1
 let g:airline#extensions#tabline#left_sep = ' '
 let g:airline#extensions#tabline#left_alt_sep = '|'
 let g:airline_powerline_fonts = 1
-let g:airline_theme = 'minimalist'
+let g:airline_theme = 'base16_ocean'
 
 if !exists('g:airline_symbols')
     let g:airline_symbols = {}
@@ -186,7 +185,6 @@ let g:ctrlp_custom_ignore = '\.git$\|node_modules$\'
 " Linter settings
 let g:ale_fixers = {
             \ 'c++': ['clang'],
-            \ 'go': ['gofmt'],
             \ 'python': ['flake8'],
             \ 'javascript': ['eslint']
             \}
@@ -196,6 +194,9 @@ let g:ale_cpp_clang_options = '-std=c++17 -Wall'
 let g:ale_sign_error = '✗'
 let g:ale_sign_warning = '⚠'
 let g:ale_sign_column_always = 1
+
+let g:ale_lint_on_save = 1
+let g:ale_lint_on_text_changed = 0
 
 let g:airline#extensions#ale#enabled = 1
 
@@ -225,6 +226,8 @@ let g:clamp_libclang_path = '/usr/lib/llvm-6.0/lib/libclang.so'
 
 let g:python3_host_prog = '/usr/bin/python3'
 
+let g:python_highlight_all = 1
+
 au BufNewFile,BufRead *.py
     \ set tabstop=4 |
     \ set softtabstop=4 |
@@ -233,19 +236,6 @@ au BufNewFile,BufRead *.py
     \ set expandtab |
     \ set autoindent |
     \ set fileformat=unix
-
-" Go
-let g:deoplete#sources#go#gocode_binary = $GOPATH . '/bin/gocode'
-let g:deoplete#sources#go#sort_class = ['package', 'func', 'type', 'var', 'const']
-
-let g:go_highlight_build_constraints = 1
-let g:go_highlight_extra_types = 1
-let g:go_highlight_fields = 1
-let g:go_highlight_functions = 1
-let g:go_highlight_methods = 1
-let g:go_highlight_operators = 1
-let g:go_highlight_structs = 1
-let g:go_highlight_types = 1
 
 " Web Development
 au BufNewFile,BufRead *.js,*.html,*.css
@@ -265,6 +255,11 @@ let g:deoplete#sources = {}
 "let g:deoplete#sources['javascript.jsx'] = ['file', 'ultisnips', 'ternjs']
 let g:tern#command = ['tern']
 let g:tern#arguments = ['--persistent']
+
+let g:prettier#autoformat = 0
+autocmd BufWritePre *.jsx,*.js,*.json,*.css,*.scss,*.less,*.graphql Prettier
+
+let g:javascript_plugin_flow = 1
 
 " }}}
 
