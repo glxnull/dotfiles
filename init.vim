@@ -5,8 +5,6 @@ call plug#begin('~/.local/share/nvim/plugged')
 Plug 'scrooloose/nerdtree'
 Plug 'ryanoasis/vim-devicons'
 Plug 'majutsushi/tagbar'
-Plug 'vim-airline/vim-airline'
-Plug 'vim-airline/vim-airline-themes'
 Plug 'ctrlpvim/ctrlp.vim'
 Plug 'editorconfig/editorconfig-vim'
 Plug 'jiangmiao/auto-pairs'
@@ -16,10 +14,17 @@ Plug 'SirVer/ultisnips'
 Plug 'honza/vim-snippets'
 Plug 'ntpeters/vim-better-whitespace'
 Plug 'w0rp/ale'
+Plug 'tpope/vim-surround'
+Plug 'itchyny/lightline.vim'
+Plug 'mgee/lightline-bufferline'
 
 " Autocomplete support
 Plug 'Shougo/deoplete.nvim', { 'do': ':UpdateRemotePlugins' }
 Plug 'Shougo/neco-vim'
+Plug 'autozimu/LanguageClient-neovim', {
+    \ 'branch': 'next',
+    \ 'do': 'bash install.sh',
+    \ }
 
 " C/C++
 Plug 'zchee/deoplete-clang'
@@ -36,10 +41,7 @@ Plug 'othree/html5.vim'
 Plug 'othree/csscomplete.vim'
 Plug 'cakebaker/scss-syntax.vim'
 Plug 'pangloss/vim-javascript'
-Plug 'ternjs/tern_for_vim', { 'do': 'npm install' }
 Plug 'posva/vim-vue'
-Plug 'ternjs/tern_for_vim', { 'for': ['javascript'] }
-Plug 'carlitux/deoplete-ternjs', { 'for': ['javascript'] }
 Plug 'leshill/vim-json'
 Plug 'prettier/vim-prettier'
 
@@ -51,7 +53,6 @@ Plug 'plasticboy/vim-markdown'
 Plug 'rhysd/vim-gfm-syntax'
 Plug 'ekalinin/Dockerfile.vim'
 Plug 'xuhdev/vim-latex-live-preview', { 'for': 'tex' }
-Plug 'JuliaEditorSupport/julia-vim'
 
 " Themes
 Plug 'wimstefan/vim-artesanal'
@@ -61,6 +62,7 @@ Plug 'arcticicestudio/nord-vim'
 Plug 'joshdick/onedark.vim'
 Plug 'chriskempson/base16-vim'
 Plug 'NLKNguyen/papercolor-theme'
+Plug 'ajh17/Spacegray.vim'
 
 call plug#end()
 
@@ -70,6 +72,7 @@ set tabstop=4
 set softtabstop=4
 set shiftwidth=4
 set expandtab
+set linespace=3
 set foldmethod=indent
 set foldlevel=99
 set number
@@ -78,6 +81,8 @@ set autoindent
 set smartindent
 set updatetime=100
 set noshowmode
+set laststatus=2
+set showtabline=2
 
 if has('termguicolors')
     set termguicolors
@@ -86,15 +91,11 @@ endif
 syntax enable
 inoremap <expr> <CR> pumvisible() ? "\<C-Y>" : "\<CR>"
 
-if has('gui_running')
-    set background=dark
-    colorscheme smyck
-else
-    set background=dark
-    colorscheme base16-ocean
-endif
-set completeopt-=preview
+let base16colorspace=256
+set background=dark
+colorscheme spacegray
 
+set completeopt-=preview
 set cursorline
 highlight CursorLine term=bold cterm=bold guibg=#555753
 
@@ -106,51 +107,31 @@ nnoremap <C-Right> :bnext<CR>
 nnoremap <C-z> :vsplit<CR>
 nnoremap <C-x> :split<CR>
 
-" Enable deoplete
+" Enable deoplete and LSP
 let g:deoplete#enable_at_startup = 1
+let g:LanguageClient_autoStart = 1
 " }}}
 
-" Vim airline
-let g:airline#extensions#tabline#enabled = 1
-let g:airline#extensions#tabline#left_sep = ' '
-let g:airline#extensions#tabline#left_alt_sep = '|'
-let g:airline_powerline_fonts = 1
-let g:airline_theme = 'base16_ocean'
+" Lightline
+let g:lightline = {
+    \ 'colorscheme': 'wombat',
+    \ 'component': {
+    \   'lineinfo': ' %3l:%-2v'
+    \ },
+    \ 'component_function': { 'gitbranch': 'fugitive#head' },
+    \ 'active': {
+    \   'left': [ [ 'mode', 'paste' ],
+    \             [ 'gitbranch', 'readonly', 'filename', 'modified' ] ]
+    \ },
+    \ }
+let g:lightline.separator    = { 'left': '', 'right': '' }
+let g:lightline.subseparator = { 'left': '', 'right': '' }
 
-if !exists('g:airline_symbols')
-    let g:airline_symbols = {}
-endif
-
-if !exists('g:airline_powerline_fonts')
-  let g:airline#extensions#tabline#left_sep = ' '
-  let g:airline#extensions#tabline#left_alt_sep = '|'
-  let g:airline_left_sep          = '▶'
-  let g:airline_left_alt_sep      = '»'
-  let g:airline_right_sep         = '◀'
-  let g:airline_right_alt_sep     = '«'
-  let g:airline#extensions#branch#prefix     = '⤴' "➔, ➥, ⎇
-  let g:airline#extensions#readonly#symbol   = '⊘'
-  let g:airline#extensions#linecolumn#prefix = '¶'
-  let g:airline#extensions#paste#symbol      = 'ρ'
-  let g:airline_symbols.linenr    = '␊'
-  let g:airline_symbols.branch    = '⎇'
-  let g:airline_symbols.paste     = 'ρ'
-  let g:airline_symbols.paste     = 'Þ'
-  let g:airline_symbols.paste     = '∥'
-  let g:airline_symbols.whitespace = 'Ξ'
-else
-  let g:airline#extensions#tabline#left_sep = ''
-  let g:airline#extensions#tabline#left_alt_sep = ''
-
-  " powerline symbols
-  let g:airline_left_sep = ''
-  let g:airline_left_alt_sep = ''
-  let g:airline_right_sep = ''
-  let g:airline_right_alt_sep = ''
-  let g:airline_symbols.branch = ''
-  let g:airline_symbols.readonly = ''
-  let g:airline_symbols.linenr = ''
-endif
+let g:lightline#bufferline#enable_devicons= 1
+let g:lightline.tabline          = { 'left': [ [ 'buffers' ] ], 'right': [ [ 'close' ] ] }
+let g:lightline.component_expand = { 'buffers': 'lightline#bufferline#buffers'}
+let g:lightline.component_type   = { 'buffers': 'tabsel' }
+let g:lightline#bufferline#modified= ' ✱'
 
 " Icons
 let g:webdevicons_enable = 1
@@ -161,7 +142,7 @@ let g:webdevicons_enable_nerdtree = 1
 
 " NERDTree
 nnoremap <leader>d :NERDTreeToggle<CR>
-map <F8> :NERDTreeToggle<CR>
+nnoremap <F8> :NERDTreeToggle<CR>
 
 let NERDTreeIgnore = [
     \ '\~$',
@@ -169,7 +150,7 @@ let NERDTreeIgnore = [
     \ '^node_modules$',
     \ '^.ropeproject$',
     \ '^__pycache__$'
-\]
+    \ ]
 
 " Tagbar
 nmap <F5> :TagbarToggle<CR>
@@ -182,23 +163,28 @@ let g:ctrlp_working_path_mode = 'ra'
 
 let g:ctrlp_custom_ignore = '\.git$\|node_modules$\'
 
+" Language Client
+let g:LanguageClient_serverCommands = {
+    \ 'javascript': [ 'javascript-typescript-stdio' ]
+    \ }
+
 " Linter settings
 let g:ale_fixers = {
-            \ 'c++': ['clang'],
-            \ 'python': ['flake8'],
-            \ 'javascript': ['eslint']
-            \}
+    \ 'c++': [ 'clang' ],
+    \ 'python': [ 'flake8' ],
+    \ 'javascript': [ 'eslint' ]
+    \ }
 
 let g:ale_cpp_clang_options = '-std=c++17 -Wall'
 
 let g:ale_sign_error = '✗'
 let g:ale_sign_warning = '⚠'
+
 let g:ale_sign_column_always = 1
 
-let g:ale_lint_on_save = 1
-let g:ale_lint_on_text_changed = 0
-
-let g:airline#extensions#ale#enabled = 1
+let g:ale_lint_on_text_changed = 'never'
+let g:ale_lint_on_save = 0
+let g:ale_lint_on_enter = 0
 
 " Snippets
 let g:UltiSnipsExpandTrigger = '<tab>'
@@ -223,9 +209,7 @@ let g:clamp_autostart = 1
 let g:clamp_libclang_path = '/usr/lib/llvm-6.0/lib/libclang.so'
 
 " Python
-
 let g:python3_host_prog = '/usr/bin/python3'
-
 let g:python_highlight_all = 1
 
 au BufNewFile,BufRead *.py
@@ -244,23 +228,10 @@ au BufNewFile,BufRead *.js,*.html,*.css
     \ set shiftwidth=2
 
 autocmd FileType css setlocal omnifunc=csscomplete#CompleteCSS
-
-let g:deoplete#omni#functions = {}
-let g:deoplete#omni#functions.javascript = [
-  \ 'tern#Complete',
-  \ 'jspc#omni'
-\]
-
-let g:deoplete#sources = {}
-"let g:deoplete#sources['javascript.jsx'] = ['file', 'ultisnips', 'ternjs']
-let g:tern#command = ['tern']
-let g:tern#arguments = ['--persistent']
-
-let g:prettier#autoformat = 0
 autocmd BufWritePre *.jsx,*.js,*.json,*.css,*.scss,*.less,*.graphql Prettier
 
-let g:javascript_plugin_flow = 1
-
+" Javascript
+autocmd FileType javascript setlocal omnifunc=LanguageClient#complete
 " }}}
 
 " Github markdown
@@ -274,3 +245,7 @@ autocmd BufRead,BufNew,BufNewFile README.md setlocal ft=markdown.gfm
 " LaTeX
 autocmd FileType tex setl updatetime=1
 let g:livepreview_previewer = 'okular'
+
+let g:latex_indent_enabled = 1
+let g:latex_fold_envs = 0
+let g:latex_fold_sections = []
