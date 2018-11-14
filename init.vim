@@ -27,9 +27,8 @@ Plug 'autozimu/LanguageClient-neovim', {
     \ }
 
 " C/C++
-Plug 'zchee/deoplete-clang'
-Plug 'bbchung/Clamp'
 Plug 'vhdirk/vim-cmake'
+Plug 'bbchung/Clamp'
 
 " Python
 Plug 'vim-python/python-syntax'
@@ -93,7 +92,7 @@ inoremap <expr> <CR> pumvisible() ? "\<C-Y>" : "\<CR>"
 
 let base16colorspace=256
 set background=dark
-colorscheme spacegray
+colorscheme PaperColor
 
 set completeopt-=preview
 set cursorline
@@ -107,9 +106,6 @@ nnoremap <C-Right> :bnext<CR>
 nnoremap <C-z> :vsplit<CR>
 nnoremap <C-x> :split<CR>
 
-" Enable deoplete and LSP
-let g:deoplete#enable_at_startup = 1
-let g:LanguageClient_autoStart = 1
 " }}}
 
 " Lightline
@@ -163,19 +159,17 @@ let g:ctrlp_working_path_mode = 'ra'
 
 let g:ctrlp_custom_ignore = '\.git$\|node_modules$\'
 
-" Language Client
-let g:LanguageClient_serverCommands = {
-    \ 'javascript': [ 'javascript-typescript-stdio' ]
-    \ }
-
 " Linter settings
+let g:ale_completion_enabled = 0
+let g:ale_linters_explicit= 1
+
 let g:ale_fixers = {
-    \ 'c++': [ 'clang' ],
-    \ 'python': [ 'flake8' ],
-    \ 'javascript': [ 'eslint' ]
+    \ 'cpp': [ 'clang' ],
+    \ 'python': [ 'flake8', 'pylint' ],
+    \ 'javascript': [ 'eslint', 'prettier' ]
     \ }
 
-let g:ale_cpp_clang_options = '-std=c++17 -Wall'
+let g:ale_cpp_clang_options = '-std=c++17 -Wall -Wextra'
 
 let g:ale_sign_error = '✗'
 let g:ale_sign_warning = '⚠'
@@ -201,12 +195,55 @@ hi ExtraWhitespace guibg=#E06C75
 
 " Languages {{{
 
-" C++
-let g:deoplete#sources#clang#libclang_path = '/usr/lib/llvm-6.0/lib/libclang.so'
-let g:deoplete#sources#clang#clang_header = '/usr/lib/clang/6.0.0'
+" Deoplete
+let g:deoplete#enable_at_startup = 1
+let g:deoplete#enable_smart_case = 1
 
+call deoplete#custom#source('LanguageClient',
+            \ 'min_pattern_length',
+            \ 2)
+
+if !exists('g:deoplete#omni#input_patterns')
+    let g:deoplete#omni#input_patterns = {}
+endif
+
+call deoplete#custom#source('_',
+            \ 'disabled_syntaxes', ['Comment', 'String'])
+
+autocmd InsertLeave,CompleteDone * if pumvisible() == 0 | pclose | endif
+
+call deoplete#custom#option('sources', {
+            \ 'python3': ['LanguageClient'],
+            \ 'c': ['LanguageClient'],
+            \ 'cpp': ['LanguageClient'],
+            \ 'javascript': ['LanguageClient'],
+            \ 'vim': ['vim']
+            \})
+
+let g:deoplete#ignore_sources = {}
+let g:deoplete#ignore_sources._ = ['buffer', 'around']
+
+" Language Client
+let g:LanguageClient_autoStart = 1
+
+let g:LanguageClient_serverCommands = {
+            \ 'cpp': ['clangd'],
+            \ 'c': ['clangd'],
+            \ 'python': ['pyls'],
+            \ 'javascript': [ 'javascript-typescript-stdio' ]
+            \ }
+
+let g:LanguageClient_rootMarkers = {
+            \ 'cpp': ['compile_commands.json', 'build'],
+            \ 'c': ['compile_commands.json', 'build'],
+            \ }
+
+set completefunc=LanguageClient#complete
+set formatexpr=LanguageClient_textDocument_rangeFormatting()
+
+" C++
 let g:clamp_autostart = 1
-let g:clamp_libclang_path = '/usr/lib/llvm-6.0/lib/libclang.so'
+let g:clamp_libclang_file = '/usr/lib/llvm-6.0/lib/libclang.so'
 
 " Python
 let g:python3_host_prog = '/usr/bin/python3'
@@ -222,16 +259,14 @@ au BufNewFile,BufRead *.py
     \ set fileformat=unix
 
 " Web Development
-au BufNewFile,BufRead *.js,*.html,*.css
+au BufNewFile,BufRead *.js,*.html
     \ set tabstop=2 |
     \ set softtabstop=2 |
     \ set shiftwidth=2
 
-autocmd FileType css setlocal omnifunc=csscomplete#CompleteCSS
+autocmd FileType css,sass,scss setlocal omnifunc=csscomplete#CompleteCSS
 autocmd BufWritePre *.jsx,*.js,*.json,*.css,*.scss,*.less,*.graphql Prettier
 
-" Javascript
-autocmd FileType javascript setlocal omnifunc=LanguageClient#complete
 " }}}
 
 " Github markdown
