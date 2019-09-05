@@ -1,8 +1,7 @@
-# dotfiles
+# Dotfiles
 
 My dotfiles.
 
 * Zsh
-* Neovim (current editor)
-* Emacs
+* Neovim
 * Tmux
