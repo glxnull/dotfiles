@@ -12,13 +12,13 @@ Plug 'SirVer/ultisnips'
 Plug 'honza/vim-snippets'
 Plug 'ntpeters/vim-better-whitespace'
 Plug 'dense-analysis/ale'
+Plug 'maximbaz/lightline-ale'
 Plug 'tpope/vim-surround'
 Plug 'itchyny/lightline.vim'
 Plug 'mgee/lightline-bufferline'
 Plug 'liuchengxu/vista.vim'
 Plug 'junegunn/fzf', { 'dir': '~/.fzf', 'do': './install --no-bash' }
 Plug 'junegunn/fzf.vim'
-Plug 'Chiel92/vim-autoformat'
 
 " Autocomplete support
 Plug 'Shougo/deoplete.nvim', { 'do': ':UpdateRemotePlugins' }
@@ -52,17 +52,20 @@ Plug 'rhysd/vim-gfm-syntax'
 Plug 'ekalinin/Dockerfile.vim'
 Plug 'xuhdev/vim-latex-live-preview', { 'for': 'tex' }
 Plug 'cespare/vim-toml'
+Plug 'sheerun/vim-polyglot'
 
 " Themes
 Plug 'NLKNguyen/papercolor-theme'
 Plug 'ayu-theme/ayu-vim'
 Plug 'kristijanhusak/vim-hybrid-material'
-Plug 'rakr/vim-one'
 Plug 'morhetz/gruvbox'
 Plug 'mhartington/oceanic-next'
 Plug 'christophermca/meta5'
 Plug 'kjssad/quantum.vim'
+Plug 'drewtempelmeyer/palenight.vim'
 Plug 'cocopon/lightline-hybrid.vim'
+Plug 'joshdick/onedark.vim'
+Plug 'yarisgutierrez/ayu-lightline'
 
 call plug#end()
 
@@ -89,16 +92,17 @@ if has('termguicolors')
 endif
 
 syntax enable
-inoremap <expr> <CR> pumvisible() ? "\<C-Y>" : "\<CR>"
-
 set background=dark
-colorscheme quantum
+colorscheme ayu
 let g:enable_bold_font = 1
 
+set completeopt=longest,menuone
 set completeopt-=preview
 set cursorline
 highlight CursorLine term=bold cterm=bold guibg=#555753
-hi Normal guibg=NONE ctermbg=NONE
+"hi Normal guibg=NONE ctermbg=NONE
+
+inoremap <expr> <CR> pumvisible() ? "\<C-y>" : "\<C-g>u\<CR>"
 
 " Move between buffers
 nnoremap <C-Left> :bprevious<CR>
@@ -110,39 +114,60 @@ nnoremap <C-m> :split<CR>
 " }}}
 
 " Lightline
+let g:lightline#ale#indicator_checking = "\uf110"
+let g:lightline#ale#indicator_warnings = "\uf071"
+let g:lightline#ale#indicator_errors = "\uf05e"
+let g:lightline#ale#indicator_ok = "\uf00c"
+
 let g:lightline = {
-    \ 'colorscheme': 'quantum',
+    \ 'colorscheme': 'ayu',
     \ 'component': {
-    \   'lineinfo': ' %3l:%-2v'
+    \   'lineinfo': ' %3l:%-2v',
+    \   'vim_icon': "\ue7c5 " . ' Buffers ',
     \ },
     \ 'component_function': {
-            \ 'gitbranch': 'FurgitiveBranch',
+            \ 'gitbranch': 'FugitiveBranchIcon',
             \ 'filetype': 'DevIconsFiletype',
             \ 'fileformat': 'DevIconsFileformat',
             \ },
     \ 'active': {
     \   'left': [ [ 'mode', 'paste' ],
-    \             [ 'gitbranch', 'readonly', 'filename', 'modified' ] ]
+    \             [ 'gitbranch', 'readonly', 'filename', 'modified' ] ],
+    \   'right': [ ['lineinfo'], [ 'percent' ], [ 'fileformat', 'fileencoding', 'filetype' ],
+    \              [ 'linter_checking', 'linter_errors', 'linter_warnings', 'linter_ok' ] ],
     \ },
     \ }
 
-let g:lightline.separator    = { 'left': '', 'right': '' }
-let g:lightline.subseparator = { 'left': '', 'right': '' }
-let g:lightline.tabline_separator = { 'left': "\ue0bc", 'right': "\ue0ba " }
-let g:lightline.tabline_subseparator = { 'left': "\ue0bb", 'right': "\ue0bb" }
+let g:lightline.separator    = { 'left': "", 'right': "" }
+let g:lightline.subseparator = { 'left': "", 'right': "" }
+let g:lightline.tabline_separator = { 'left': "", 'right': "" }
+let g:lightline.tabline_subseparator = { 'left': "", 'right': "" }
 
-let g:lightline.tabline          = { 'left': [ [ 'buffers' ] ], 'right': [ [ 'close' ] ] }
-let g:lightline.component_expand = { 'buffers': 'lightline#bufferline#buffers'}
-let g:lightline.component_type   = { 'buffers': 'tabsel' }
+let g:lightline.tabline          = { 'left': [ [ 'buffers' ] ], 'right': [ [ 'vim_icon' ] ] }
+let g:lightline.component_expand = {
+      \ 'buffers': 'lightline#bufferline#buffers',
+      \ 'linter_checking': 'lightline#ale#checking',
+      \ 'linter_warnings': 'lightline#ale#warnings',
+      \ 'linter_errors': 'lightline#ale#errors',
+      \ 'linter_ok': 'lightline#ale#ok',
+      \ }
+
+let g:lightline.component_type   = {
+      \ 'buffers': 'tabsel',
+      \ 'linter_checking': 'left',
+      \ 'linter_warnings': 'warning',
+      \ 'linter_errors': 'error',
+      \ 'linter_ok': 'left',
+      \ }
 
 let g:lightline#bufferline#modified = ' ✱'
 let g:lightline#bufferline#enable_devicons = 1
 let g:lightline#bufferline#unnamed = 'No Name'
 
-function! FurgitiveBranch()
+function! FugitiveBranchIcon()
     try
         if &ft !~? 'vimfiler\|gundo' && exists('*fugitive#head') && strlen(fugitive#head())
-            return ' ' . fugitive#head()
+            return " " . fugitive#head()
         endif
     catch
     endtry
@@ -151,8 +176,7 @@ endfunction
 
 " Icons
 let g:webdevicons_enable = 1
-let g:webdevicons_enable_airline_tabline = 1
-let g:webdevicons_enable_airline_statusline = 1
+let g:webdevicons_enable_nerdtree = 1
 
 function! DevIconsFiletype()
     return winwidth(0) > 70 ? (strlen(&filetype) ? &filetype . ' ' . WebDevIconsGetFileTypeSymbol() : 'no ft') : ''
@@ -177,29 +201,33 @@ let NERDTreeIgnore = [
 
 " Linter settings
 let g:ale_completion_enabled = 0
-let g:ale_linters_explicit= 1
+let g:ale_linters_explicit = 1
 
 let g:ale_fixers = {
+    \ 'cpp': ['clang-format'],
+    \ 'c': ['clang-format'],
+    \ 'python': ['autopep8', 'isort'],
+    \ 'javascript': ['prettier'],
+    \ }
+
+let g:ale_linters = {
     \ 'cpp': ['ccls'],
     \ 'c': ['ccls'],
-    \ 'python': ['flake8', 'pylint'],
-    \ 'javascript': ['prettier'],
-    \ 'rust': ['rustfmt'],
+    \ 'python': ['pylint', 'flake8'],
+    \ 'javascript': ['eslint'],
     \ }
 
 let g:ale_cpp_clang_options = '-std=c++17 -Wall -Wextra'
 
 let g:ale_sign_error = '✗'
 let g:ale_sign_warning = '⚠'
-
 let g:ale_sign_column_always = 1
 
 let g:ale_lint_on_text_changed = 'never'
 let g:ale_lint_on_save = 0
 let g:ale_lint_on_enter = 0
 
-" Autoformat
-noremap <F3> :Autoformat<CR>
+noremap <F3> :ALEFix<CR>
 
 " Snippets
 let g:UltiSnipsExpandTrigger = '<tab>'
@@ -228,13 +256,14 @@ let g:vista_executive_for = {
             \ 'c': 'lcn',
             \ 'cpp': 'lcn',
             \ 'python': 'lcn',
+            \ 'javascript': 'lcn',
             \ }
 
 let g:vista_fzf_preview = ['right:50%']
 let g:vista#renderer#icons = {
-            \ 'function': '\uf794',
-            \ 'module': '\uf6a6',
-            \ 'variable': '\uf71b',
+            \ 'function': "\uf794",
+            \ 'module': "\uf6a6",
+            \ 'variable': "\uf71b",
             \ }
 
 " FZF
@@ -295,7 +324,6 @@ call deoplete#custom#option('sources', {
             \ 'c': ['LanguageClient'],
             \ 'cpp': ['LanguageClient'],
             \ 'javascript': ['LanguageClient'],
-            \ 'rust': ['LanguageClient'],
             \ 'vim': ['vim'],
             \ })
 
@@ -308,8 +336,7 @@ let g:LanguageClient_serverCommands = {
             \ 'cpp': ['ccls', '--log-file=/tmp/ccls.log'],
             \ 'c': ['ccls', '--log-file=/tmp/ccls.log'],
             \ 'python': ['pyls'],
-            \ 'javascript': ['javascript-typescript-stdio'],
-            \ 'rust': ['rls'],
+            \ 'javascript': ['typescript-language-server', '--stdio'],
             \ }
 
 let g:LanguageClient_rootMarkers = {
@@ -344,7 +371,6 @@ au BufNewFile,BufRead *.js,*.html
     \ set shiftwidth=2
 
 autocmd FileType css,sass,scss setlocal omnifunc=csscomplete#CompleteCSS
-autocmd BufWritePre *.jsx,*.js,*.json,*.graphql Prettier
 
 " }}}
 
