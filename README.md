@@ -1,7 +1,6 @@
 # Dotfiles
 
-My dotfiles.
-
-* Zsh
-* Neovim
-* Tmux
+* Terminal: Kitty
+* Shell: zsh
+* Editor: Neovim
+* tmux
