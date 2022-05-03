@@ -10,13 +10,14 @@ treesitter.setup {
     disable = {},
   },
   ensure_installed = {
+    "c",
+    "cpp",
     "toml",
     "json",
     "yaml",
     "html",
     "scss",
     "javascript",
-    "php" -- Temp
   },
 }
 
