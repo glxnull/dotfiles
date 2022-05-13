@@ -21,11 +21,10 @@ if has('termguicolors')
   set termguicolors
 end
 
-let g:tokyodark_transparent_background = 0
-let g:tokyodark_enable_italic = 1
-let g:tokyodark_color_gamma = "1.0"
-colorscheme tokyodark
+colorscheme nightfox
 
-let g:python3_host_prog = expand("python3")
+let mapleader = ' '
+
+let g:python3_host_prog = expand('/usr/bin/python3')
 
 lua require('init')

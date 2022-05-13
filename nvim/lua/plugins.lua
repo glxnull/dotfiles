@@ -13,6 +13,7 @@ packer.init {
 packer.startup(function(use)
   use { 'wbthomason/packer.nvim' }
 
+-- LSP and completion
   use { 'neovim/nvim-lspconfig' }
   use {
     'hrsh7th/nvim-cmp',
@@ -22,11 +23,33 @@ packer.startup(function(use)
       'hrsh7th/cmp-path'
     }
   }
+  use {
+    'L3MON4D3/LuaSnip',
+    requires = {
+      'saadparwaiz1/cmp_luasnip',
+      'rafamadriz/friendly-snippets'
+    }
+  }
   use { 'mhartington/formatter.nvim' }
   use { 'nvim-treesitter/nvim-treesitter', run = ':TSUpdate' }
-  use { 'editorconfig/editorconfig-vim' }
+  use { 'onsails/lspkind.nvim' }
 
+-- Telescope
+  use {
+    'nvim-telescope/telescope.nvim',
+    requires = {
+      'nvim-lua/plenary.nvim'
+    }
+  }
+
+-- Utils
+  use { 'editorconfig/editorconfig-vim' }
+  use { 'nvim-lualine/lualine.nvim' }
+  use { 'kyazdani42/nvim-web-devicons' }
+
+-- Themes
   use { 'rebelot/kanagawa.nvim' }
   use { 'tiagovla/tokyodark.nvim' }
   use { 'folke/tokyonight.nvim' }
+  use { 'EdenEast/nightfox.nvim' }
 end)

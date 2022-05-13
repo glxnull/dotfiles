@@ -1,0 +1,26 @@
+local lualine = require('lualine')
+
+lualine.setup {
+  options = {
+    theme = 'nightfox',
+    icons_enabled = true,
+    global_status = true,
+  },
+  extensions = {},
+  sections = {
+    lualine_a = { { 'mode', upper = true } },
+    lualine_b = {},
+    lualine_c = { { 'filename', file_status = true, path = 1 } },
+    lualine_x = { { 'diagnostics', sources = { 'nvim_diagnostic' } },'encoding', 'fileformat', 'filetype' },
+    lualine_y = { 'progress' },
+    lualine_z = { 'location' },
+  },
+  inactive_sections = {
+    lualine_a = {},
+    lualine_b = {},
+    lualine_c = { 'filename' },
+    lualine_x = { 'location' },
+    lualine_y = {},
+    lualine_z = {},
+  },
+}
