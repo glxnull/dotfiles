@@ -17,6 +17,7 @@ treesitter.setup {
     "yaml",
     "html",
     "scss",
+    "lua",
     "javascript",
   },
 }

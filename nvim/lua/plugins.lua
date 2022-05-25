@@ -1,3 +1,5 @@
+vim.cmd([[packadd packer.nvim]])
+
 local packer = require('packer')
 
 -- Use packer as a popup
@@ -30,9 +32,10 @@ packer.startup(function(use)
       'rafamadriz/friendly-snippets'
     }
   }
-  use { 'mhartington/formatter.nvim' }
   use { 'nvim-treesitter/nvim-treesitter', run = ':TSUpdate' }
   use { 'onsails/lspkind.nvim' }
+  use { 'folke/lsp-colors.nvim' }
+  use { 'mhartington/formatter.nvim' }
 
 -- Telescope
   use {
