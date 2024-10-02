@@ -8,7 +8,6 @@ conform.setup {
     html = { 'prettier' },
     json = { 'prettier' },
     yaml = { 'prettier' },
-    vue = { 'prettier' },
   },
   format_on_save = {
     lsp_fallback = true,
