@@ -3,4 +3,4 @@
 * Terminal: Kitty
 * Shell: zsh
 * Editor: Neovim
-* tmux
+* TODO: Add tmux
