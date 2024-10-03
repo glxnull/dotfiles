@@ -1,23 +1,35 @@
 return {
   {
     'nvim-lualine/lualine.nvim',
-	dependencies = { 'nvim-tree/nvim-web-devicons' },
-	event = 'VeryLazy',
-	config = function()
+    dependencies = { 'nvim-tree/nvim-web-devicons' },
+    event = 'VeryLazy',
+    config = function()
       require('config.lualine')
     end,
   },
   {
     'windwp/nvim-autopairs',
-	config = true,
-	event = 'BufReadPost',
+    config = true,
+    event = 'BufReadPost',
   },
   {
     'nvim-treesitter/nvim-treesitter',
-	build = ':TSUpdate',
+    build = ':TSUpdate',
     lazy = false,
-	config = function()
+    config = function()
       require('config.treesitter')
+    end,
+  },
+  {
+    'nvim-telescope/telescope.nvim',
+    version = '0.1.8',
+    dependencies = {
+      'nvim-telescope/telescope-file-browser.nvim',
+      'nvim-lua/plenary.nvim',
+    },
+    lazy = false,
+    config = function()
+      require('config.telescope')
     end,
   },
   -- LSP, linting and formatting

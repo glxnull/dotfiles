@@ -1,6 +1,6 @@
--- Neovim general settings
-require('general')
+-- General settings
+require('core.general')
 -- Plugins
 require('lazy-config')
 -- Colorscheme
-require('config.colorscheme')
+require('core.colorscheme')
