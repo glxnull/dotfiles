@@ -25,10 +25,18 @@ cmp.setup {
     ['<CR>'] = cmp.mapping.confirm({ select = false }),
   }),
   sources = cmp.config.sources({
-    { name = 'nvim_lsp' }, -- TODO: add snippets engine
+    -- { name = 'nvim_lsp' }, TODO: add snippets engine
     { name = 'buffer' },
     { name = 'path' },
   }),
+  window = {
+    completion = cmp.config.window.bordered({
+      border = { '╭', '─', '╮', '│', '╯', '─', '╰', '│' },
+    }),
+    documentation = cmp.config.window.bordered({
+      border = { '╭', '─', '╮', '│', '╯', '─', '╰', '│' },
+    }),
+  },
   formatting = {
     format = function(_, vim_item)
       vim_item.kind = (icons[vim_item.kind] or '') .. ' ' .. vim_item.kind
