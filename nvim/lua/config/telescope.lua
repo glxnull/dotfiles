@@ -51,21 +51,21 @@ telescope.setup {
         ['q'] = require('telescope.actions').close,
       },
     },
-    pickers = {
-      git_status = {
-        initial_mode = 'normal',
-      },
+  },
+  pickers = {
+    git_status = {
+      initial_mode = 'normal',
     },
-    extensions = {
-      file_browser = {
-        previewer = true,
-        grouped = true,
-        hijack_netrw = false,
-        hidden = true,
-        initial_mode = 'normal',
-        use_fd = false,
-        respect_gitignore = false,
-      },
+  },
+  extensions = {
+    file_browser = {
+      previewer = true,
+      grouped = true,
+      hijack_netrw = false,
+      hidden = true,
+      initial_mode = 'normal',
+      use_fd = false,
+      respect_gitignore = false,
     },
   },
 }
